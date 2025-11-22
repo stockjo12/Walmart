@@ -10,7 +10,7 @@ library(embed)
 library(doParallel)
 
 #Bringing in Data
-# setwd("~/Library/CloudStorage/OneDrive-BrighamYoungUniversity/STAT 348/Coding/Walmart")
+setwd("~/Library/CloudStorage/OneDrive-BrighamYoungUniversity/STAT 348/Coding/Walmart")
 first <- vroom("train.csv")  |>
   clean_names() |>
   mutate(is_holiday = as.integer(is_holiday))
