@@ -5,6 +5,7 @@ library(tidymodels)
 library(DataExplorer)
 
 ## Read in the Data
+setwd("~/Library/CloudStorage/OneDrive-BrighamYoungUniversity/STAT 348/Coding/Walmart")
 train <- vroom("./train.csv")
 test <- vroom("./test.csv")
 features <- vroom("./features.csv")
@@ -40,11 +41,23 @@ imputed_features <- juice(prep(feature_recipe))
 fullTrain <- left_join(train, imputed_features, by=c("Store", "Date")) %>%
   select(-IsHoliday.y) %>%
   rename(IsHoliday=IsHoliday.x) %>%
-  select(-MarkDown_Total)
+  select(-MarkDown_Total) %>%
+  mutate(
+    super_bowl    = Date %in% as.Date(c("2010-02-12","2011-02-11","2012-02-10","2013-02-08")),
+    labor_day     = Date %in% as.Date(c("2010-09-10","2011-09-09","2012-09-07","2013-09-06")),
+    thanksgiving  = Date %in% as.Date(c("2010-11-26","2011-11-25","2012-11-23","2013-11-29")),
+    christmas     = Date %in% as.Date(c("2010-12-31","2011-12-30","2012-12-28","2013-12-27"))
+  )
 fullTest <- left_join(test, imputed_features, by=c("Store", "Date")) %>%
   select(-IsHoliday.y) %>%
   rename(IsHoliday=IsHoliday.x) %>%
-  select(-MarkDown_Total)
+  select(-MarkDown_Total) %>%
+  mutate(
+    super_bowl    = Date %in% as.Date(c("2010-02-12","2011-02-11","2012-02-10","2013-02-08")),
+    labor_day     = Date %in% as.Date(c("2010-09-10","2011-09-09","2012-09-07","2013-09-06")),
+    thanksgiving  = Date %in% as.Date(c("2010-11-26","2011-11-25","2012-11-23","2013-11-29")),
+    christmas     = Date %in% as.Date(c("2010-12-31","2011-12-30","2012-12-28","2013-12-27"))
+  )
 plot_missing(fullTrain)
 plot_missing(fullTest)
 
@@ -66,7 +79,8 @@ for(store in unique(fullTest$Store)){
     
     ## Filter Test and Training Data
     dept_train <- store_train %>%
-      filter(Dept==dept)
+      filter(Dept==dept) |>
+      arrange(Date)
     dept_test <- store_test %>%
       filter(Dept==dept)
     
