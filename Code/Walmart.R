@@ -142,4 +142,4 @@ for(store in unique(fullTest$Store)){
 
 ## Write out after each store so I don't have to start over
 vroom_write(x=all_preds, 
-            file=paste0("./Walmart_Test.csv"), delim=",")
+            file=paste0("./Walmart_Test2.csv"), delim=",")
